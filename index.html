@@ -1,252 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy 100 Days!</title>
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-      background-color: pink; /* Latar belakang pink */
-    }
-
-.background-gallery {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 300vh; /* taller for smooth scroll */
-  z-index: 0;
-  column-count: 1;
-  column-gap: 0;
-  animation: scrollMasonry 20s linear infinite;
-  pointer-events: none;
-}
-
-@media (min-width: 600px) {
-  .background-gallery {
-    column-count: 2;
-  }
-}
-
-@media (min-width: 900px) {
-  .background-gallery {
-    column-count: 3;
-  }
-}
-
-@media (min-width: 1200px) {
-  .background-gallery {
-    column-count: 4;
-  }
-}
-
-.background-gallery img {
-  width: 100%;
-  display: block;
-  margin: 0;
-  break-inside: avoid;
-  opacity: 1;
-  filter: blur(1px);
-  border-radius: 10px;
-}
-@keyframes scrollMasonry {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100vh);
-  }
-}
-
-
-    .background-gallery img:nth-child(1) { top: 100%; left: 10%; animation-delay: 0s; }
-    .background-gallery img:nth-child(2) { top: 120%; left: 50%; animation-delay: 1s; }
-    .background-gallery img:nth-child(3) { top: 130%; left: 30%; animation-delay: 2s; }
-    .background-gallery img:nth-child(4) { top: 110%; left: 70%; animation-delay: 3s; }
-    .background-gallery img:nth-child(5) { top: 125%; left: 20%; animation-delay: 4s; }
-    .background-gallery img:nth-child(6) { top: 140%; left: 60%; animation-delay: 5s; }
-
-    @keyframes floatUp {
-      from { transform: translateY(0); }
-      to { transform: translateY(-150%); }
-    }
-
-    /* Main text */
-    .message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      text-align: center;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      z-index: 2;
-    }
-
-    .message h1 {
-      font-size: 3em;
-      animation: fadeIn 2s ease-in-out;
-    }
-
-    .countdown {
-      margin-top: 20px;
-      font-size: 1.5em;
-      animation: fadeIn 3s ease-in-out;
-    }
-
-    .hearts-container {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-    #playBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1em;
-      background: rgba(255, 105, 180, 0.8);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      z-index: 2;
-    }
-
-    .heart {
-      position: absolute;
-      font-size: 2em;
-      animation: floatHeart 6s linear infinite;
-      color: pink;
-      opacity: 1;
-    }
-
-    @keyframes floatHeart {
-      0% {
-        transform: translateY(100vh) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.5);
-        opacity: 0;
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-<body>
-<div class="background-gallery">
-  <img src="foto1.jpg" alt="Foto 1">
-  <img src="foto2.jpg" alt="Foto 2">
-  <img src="foto3.jpg" alt="Foto 3">
-  <img src="foto4.jpg" alt="Foto 4">
-  <img src="foto5.jpg" alt="Foto 5">
-  <img src="foto6.jpg" alt="Foto 6">
-  <img src="foto7.jpg" alt="Foto 7">
-  <img src="foto8.jpg" alt="Foto 8">
-  <img src="foto9.jpg" alt="Foto 9">
-  <img src="foto10.jpg" alt="Foto 10">
-  <img src="foto11.jpg" alt="Foto 11">
-  <img src="foto12.jpg" alt="Foto 12">
-  <img src="foto13.jpg" alt="Foto 13">
-  <img src="foto14.jpg" alt="Foto 14">
-  <img src="foto15.jpg" alt="Foto 15">
-  <img src="foto16.jpg" alt="Foto 16">
-  <img src="foto17.jpg" alt="Foto 17">
-  <img src="foto18.jpg" alt="Foto 18">
-</div>
-
-
-
-  <div class="hearts-container"></div>
-
-  <!-- Tombol play musik -->
-
- <audio id="bgMusic" hidden>
-  <source src="audio.mp3" type="audio/mpeg" />
-</audio>
-
-
 <script>
-  function playMusic() {
+    // --- CONFIGURATION ---
+    const TOTAL_PHOTOS = 200; 
+    const START_DATE = new Date("2025-02-05T22:00:00"); // Your actual anniversary
+    
+    // THE MAGIC SWITCH: Date when "Anniversary Mode" turns off
+    const SPECIAL_EFFECT_END = new Date("2026-02-07T23:59:59"); 
+
+    // 1. DYNAMIC PHOTO LOADER
+    const gallery = document.getElementById('gallery-loader');
+    for (let i = 1; i <= TOTAL_PHOTOS; i++) {
+      const img = document.createElement('img');
+      img.src = `Foto(${i}).jpg`; // Make sure this matches your file naming!
+      img.alt = "Memory " + i;
+      img.loading = "lazy";
+      img.onerror = function() { this.style.display = 'none'; };
+      gallery.appendChild(img);
+    }
+
+    // 2. SMART GREETING & TIMER
+    function updateContent() {
+      const now = new Date();
+      const diff = now - START_DATE;
+      const isSpecialMode = now <= SPECIAL_EFFECT_END;
+
+      // Update Title based on date
+      const titleElement = document.querySelector("h1");
+      const subTextElement = document.querySelector(".main-card p");
+      const letterBtn = document.querySelector(".btn-letter");
+
+      if (isSpecialMode) {
+        if (titleElement.innerText !== "Happy 1st Anniversary!") {
+            titleElement.innerText = "Happy 1st Anniversary!";
+            subTextElement.innerText = "Celebrating our best year yet.";
+            letterBtn.style.display = "inline-block"; // Show letter
+        }
+      } else {
+        // After Feb 7th, it reverts to this:
+        if (titleElement.innerText !== "Together Forever") {
+            titleElement.innerText = "Together Forever";
+            subTextElement.innerText = "Every day with you is a gift.";
+            letterBtn.style.display = "none"; // Hide letter (optional)
+        }
+      }
+
+      // Timer Logic
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("countdown").innerHTML = 
+        `We've been in love for:<br>
+        ${days} Days, ${hours} Hours, ${minutes} Minutes, ${seconds} Seconds`;
+    }
+    
+    // Run immediately and then every second
+    updateContent();
+    setInterval(updateContent, 1000);
+
+    // 3. MUSIC PLAYER
     const music = document.getElementById("bgMusic");
-    const button = document.getElementById("playBtn");
+    const musicBtn = document.getElementById("musicBtn");
+    let isPlaying = false;
 
-    music.play();
-    button.disabled = true;
-    button.innerText = "Playing...";
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+        musicBtn.innerText = "🎵 Play Our Song";
+      } else {
+        music.play();
+        musicBtn.innerText = "⏸ Pause Song";
+      }
+      isPlaying = !isPlaying;
+    }
 
-    // Saat audio selesai, ubah tombol kembali
-    music.onended = function () {
-      button.disabled = false;
-      button.innerText = "Play Again";
-    };
-  }
-</script>
+    // 4. LETTER MODAL
+    const modal = document.getElementById("letterModal");
+    const letterBox = document.querySelector(".letter-content");
 
+    function openLetter() {
+      modal.style.display = "flex";
+      setTimeout(() => {
+        modal.style.opacity = "1";
+        letterBox.style.transform = "translateY(0)";
+      }, 10);
+    }
 
-  <script>
+    function closeLetter() {
+      modal.style.opacity = "0";
+      letterBox.style.transform = "translateY(50px)";
+      setTimeout(() => {
+        modal.style.display = "none";
+      }, 500);
+    }
+
+    // 5. FLOATING HEARTS (Only run during special mode!)
     function createHeart() {
+      const now = new Date();
+      // Stop creating hearts after the special date to save battery/clean up look
+      if (now > SPECIAL_EFFECT_END) return; 
+
       const heart = document.createElement("div");
       heart.classList.add("heart");
-      heart.innerText = "❤️";
+      heart.innerText = Math.random() > 0.5 ? "❤️" : "✨";
       heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 3 + Math.random() * 3 + "s";
+      heart.style.animationDuration = Math.random() * 3 + 3 + "s";
       document.querySelector(".hearts-container").appendChild(heart);
-  
-      setTimeout(() => {
-        heart.remove();
-      }, 6000);
+      setTimeout(() => heart.remove(), 6000);
     }
+    setInterval(createHeart, 600);
 
-    setInterval(createHeart, 500);
-  </script>
-
-  <!-- Message & countdown -->
-  <div class="message">
-    <h1>Happy 100 days, and to many more!</h1>
-    <div class="countdown" id="countdown">Loading...</div>
-    <button onclick="playMusic()" id="playBtn">Press Me!</button>
-  </div>
-
-  <script>
-    const startDate = new Date("2025-02-05T22:00:00");
-    const countdownElement = document.getElementById("countdown");
-
-    function updateCountdown() {
-      const now = new Date();
-      const elapsed = now - startDate;
-
-      const totalSeconds = Math.floor(elapsed / 1000);
-      const days = Math.floor(totalSeconds / (3600 * 24));
-      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      countdownElement.innerHTML =
-        `We've been together for <strong>${days}</strong> days, ` +
-        `<strong>${hours}</strong> hours, <strong>${minutes}</strong> minutes, and ` +
-        `<strong>${seconds}</strong> seconds 💖`;
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  </script>
-</body>
-</html>
+</script>
